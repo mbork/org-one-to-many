@@ -1,0 +1,4 @@
+#+TITLE: org-one-to-many
+#+AUTHOR: Marcin Borkowski <mbork@mbork.pl>
+
+Elisp functions to divide an Org file into many pieces, corresponding to headlines at some fixed level.
