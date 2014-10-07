@@ -1,0 +1,33 @@
+#+TITLE: Test file for the org-edu HTML-based exporter
+
+* First chapter
+Some text
+** Question 1								:mct:
+What is the capital of Poland?
+*** Warsaw								:yes:
+Warsaw
+*** Poznań								 :no:
+Poznań
+*** Kraków								 :no:
+Kraków
+*** Mosina								 :no:
+Mosina
+** Question 2								:mct:
+What are the good editors?
+*** Answer								:yes:
+Emacs
+*** Answer								:yes:
+Vim
+*** Answer								 :no:
+Notepad
+*** Answer								 :no:
+Microsoft Word
+* Second chapter
+** Question 3								:mct:
+Is RMS a normal person?
+*** Yes									 :no:
+*** No									:yes:
+
+* Org-element testing
+*Lorem ipsum dolor* sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua.
