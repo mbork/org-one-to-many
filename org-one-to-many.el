@@ -20,6 +20,34 @@
     (set-buffer (get-buffer-create "tmp"))
     (pp-display-expression headlines "tmp")))
 
+; Copy subtrees at level EXPORT-GRANULARITY to their own files
+(defun org-one-to-many (&optional level directory)
+  "Copy headlines at level LEVEL (or the parameter
+  EXPORT-GRANULARITY if LEVEL not specifed) to their own files in
+  the directory called DIRECTORY (or named after the current
+  buffer)."
+  (interactive "p")
+  (let* ((filename (if buffer-file-name (file-name-base) "otm-output"))
+	 (directory (or directory filename))
+	 (buffer (current-buffer)))
+    (make-directory directory t)
+    (with-temp-buffer
+      (org-mode)
+      (insert-buffer-substring buffer)
+      ;; do stuff
+      (org-element-map (org-element-parse-buffer) '(headline)
+	(lambda (elt) (if (= (org-element-property :level elt) export-granularity)
+					; add text properties with filenames
+			  )))
+      (write-region (point-min)
+		    (point-max)
+		    (concat directory "/split-" filename ".org")
+		    nil
+		    'no-message)
+    ; change the links
+    ; split the file
+    )))
+
 ; Generate filenames from titles (=arbitrary strings)
 (defvar filenames '()
   "List of used-up filenames, to ensure injectivity of the
