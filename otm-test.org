@@ -27,7 +27,16 @@ Microsoft Word
 Is RMS a normal person?
 *** Yes									 :no:
 *** No									:yes:
-
+** Link target
+<<Second chapter>>
 * Org-element testing
 *Lorem ipsum dolor* sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua.
+** Yet another target
+:PROPERTIES:
+:CUSTOM_ID:       my-id
+:END:
+** Link testing
+Custom-id link: [[#my-id]]
+"Fuzzy" link: [[First chapter][Link to the first chapter]]
+Link to <<target>>: [[Second chapter]]
