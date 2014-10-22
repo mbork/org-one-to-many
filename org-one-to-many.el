@@ -16,7 +16,7 @@
   buffer)."
   (interactive "p")
   ;; (setq filenames '(nil)) ; (setq filenames nil) won't work - we need FILENAMES to be a cons, not nil!
-  (let* ((filenames (list nil)) ; '(nil) instead (list nil) broke things!!!
+  (let* ((filenames)
 	 (filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
 	 (buffer (current-buffer))
