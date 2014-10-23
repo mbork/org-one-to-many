@@ -10,7 +10,7 @@
   the directory called DIRECTORY (or named after the current
   buffer)."
   (interactive "p")
-  (let* ((filenames)
+  (let* (otm/filenames
 	 (filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
 	 (buffer (current-buffer))
@@ -27,9 +27,8 @@
 			  (put-text-property (org-element-property :begin elt)
 					     (org-element-property :end elt)
 					     :otm-filename
-					     (title-to-filename (org-element-property :raw-value elt)
-								filenames))
-			)))
+					     (title-to-filename
+					      (org-element-property :raw-value elt))))))
 					; change the links (see
 					; [[mu4e:msgid:87bnpd4ov7.fsf@nicolasgoaziou.fr][Re:
 					; How to change a link?]])
@@ -75,27 +74,27 @@
 		    'no-message))))
 
 ; Generate filenames from titles (=arbitrary strings)
-;; (defvar filenames '()
+;; (defvar otm/filenames ()
 ;;   "List of used-up filenames, to ensure injectivity of the
 ;;   mapping TITLE -> (TITLE-TO-FILENAME TITLE)")
 
-(defun title-to-filename (title filenames)
+(defun title-to-filename (title)
   "Convert TITLE to a valid filename, by removing all non-letters and
   changing all spaces to hyphens.  Then check whether FILENAME is in
-  FILENAMES, and if yes, append some number to it so that it becomes
-  unique.  Finally, add the generated filename to FILENAMES."
+  OTM/FILENAMES, and if yes, append some number to it so that it becomes
+  unique.  Finally, add the generated filename to OTM/FILENAMES."
   (let* ((filename (replace-regexp-in-string "[ \t\n\r]" "-" title))    ; thanks to
 	 (filename (replace-regexp-in-string "[^a-zA-Z-]" "" filename)) ; help-gnu-emacs
 	 (filename (replace-regexp-in-string "--+" "-" filename))       ; posters
 	 (filename (replace-regexp-in-string "-$" "" filename))
 	 (filename (downcase filename)))
-    (if (member filename filenames)
+    (if (member filename otm/filenames)
 	(let ((count 1) new-filename)
 	  (while (progn
 		   (incf count)
 		   (setq new-filename (concat filename "-" (number-to-string count)))
-		   (member new-filename filenames)))
-	  (push new-filename filenames)
+		   (member new-filename otm/filenames)))
+	  (push new-filename otm/filenames)
 	  new-filename)
-      (push filename filenames)
+      (push filename otm/filenames)
       filename)))
