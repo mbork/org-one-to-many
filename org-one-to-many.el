@@ -27,7 +27,7 @@
 			  (put-text-property (org-element-property :begin elt)
 					     (org-element-property :end elt)
 					     :otm-filename
-					     (title-to-filename
+					     (otm/title-to-filename
 					      (org-element-property :raw-value elt))))))
 					; change the links (see
 					; [[mu4e:msgid:87bnpd4ov7.fsf@nicolasgoaziou.fr][Re:
@@ -76,9 +76,9 @@
 ; Generate filenames from titles (=arbitrary strings)
 ;; (defvar otm/filenames ()
 ;;   "List of used-up filenames, to ensure injectivity of the
-;;   mapping TITLE -> (TITLE-TO-FILENAME TITLE)")
+;;   mapping TITLE -> (OTM/TITLE-TO-FILENAME TITLE)")
 
-(defun title-to-filename (title)
+(defun otm/title-to-filename (title)
   "Convert TITLE to a valid filename, by removing all non-letters and
   changing all spaces to hyphens.  Then check whether FILENAME is in
   OTM/FILENAMES, and if yes, append some number to it so that it becomes
