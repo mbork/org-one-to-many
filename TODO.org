@@ -1,0 +1,7 @@
+#+TITLE: Known bugs, issues, feature requests, wishful thinking
+
+* TODO Demote splitted headlines to level 1
+* TODO Split at headlines with given property (tag?)
+* TODO Optimize otm/title-to-filename,
+so that it doesn't count from scratch each time a name conflict is resolved
+* TODO Check `org-map-entries' instead of `org-element-map'
