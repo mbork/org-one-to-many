@@ -1,12 +1,7 @@
 ;; org-one-to-many functions
 
 (require 'cl)
-;;(require 'org-dp)
 (setq export-granularity 2)
-
-;; for testing
-;; (setq eval-expression-print-level nil)
-;; (setq eval-expression-print-length nil)
 
 ; Copy subtrees at level EXPORT-GRANULARITY to their own files
 (defun org-one-to-many (&optional level directory)
@@ -15,7 +10,6 @@
   the directory called DIRECTORY (or named after the current
   buffer)."
   (interactive "p")
-  ;; (setq filenames '(nil)) ; (setq filenames nil) won't work - we need FILENAMES to be a cons, not nil!
   (let* ((filenames)
 	 (filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
@@ -27,7 +21,7 @@
       (insert-buffer-substring buffer)
       ;; do stuff
       (org-element-map (org-element-parse-buffer 'headline) 'headline
-	; check org-map-entries & org-element-at-point!!
+	; TODO: check org-map-entries & org-element-at-point!!
 	(lambda (elt) (if (= (org-element-property :level elt) export-granularity)
 					; add text properties with filenames
 			  (put-text-property (org-element-property :begin elt)
@@ -54,7 +48,6 @@
 		  (unless (equal destfile sourcefile)
 		    (delete-region (org-element-property :begin link)
 				   (org-element-property :end link))
-		    ;; (pp-eval-expression 'link)
 		    (org-element-put-property link
 					      :raw-link
 					      (concat "file:"
