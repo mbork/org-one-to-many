@@ -5,3 +5,5 @@
 * TODO Optimize otm/title-to-filename,
 so that it doesn't count from scratch each time a name conflict is resolved
 * TODO Check `org-map-entries' instead of `org-element-map'
+* Config
+#+TODO: TODO(!) | DONE(!)
