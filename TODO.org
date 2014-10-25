@@ -4,6 +4,7 @@
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2014-10-25 sob 17:51]
 :END:
+* TODO Use named buffers associated with to-be-created files instead of with-temp-buffer
 * TODO Split at headlines with given property (tag?)
 * TODO Optimize otm/title-to-filename,
 so that it doesn't count from scratch each time a name conflict is resolved
