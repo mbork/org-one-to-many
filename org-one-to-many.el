@@ -62,7 +62,17 @@
 	  (setq beg (next-single-property-change (point) :otm-filename))
 	(setq end (next-single-char-property-change beg :otm-filename))
 	(setq subfilename (concat (get-text-property beg :otm-filename) ".org"))
-	(write-region beg end (concat directory "/" subfilename))
+	;; Write the part between beg and end to the external file,
+	;; promoting it to level 1 first
+	(let ((headline (buffer-substring-no-properties beg end)))
+	  (with-temp-buffer
+	    (insert headline)
+	    (goto-char (point-min))
+	    (org-mode)
+	    (while (> (org-element-property :level (org-element-at-point)) 1)
+	      (org-promote-subtree))
+	    (write-region (point-min) (point-max) (concat directory "/" subfilename))))
+	;; delete the previous contents, insert a link
 	(delete-region beg end)
 	(goto-char beg)
 	(save-excursion (insert "[[file:" subfilename "]]\n")))

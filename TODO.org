@@ -1,6 +1,9 @@
 #+TITLE: Known bugs, issues, feature requests, wishful thinking
 
-* TODO Demote splitted headlines to level 1
+* DONE Promote splitted headlines to level 1
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2014-10-25 sob 17:51]
+:END:
 * TODO Split at headlines with given property (tag?)
 * TODO Optimize otm/title-to-filename,
 so that it doesn't count from scratch each time a name conflict is resolved
