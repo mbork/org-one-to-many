@@ -4,12 +4,11 @@
 (setq export-granularity 2)
 
 ; Copy subtrees at level EXPORT-GRANULARITY to their own files
-(defun org-one-to-many (&optional level directory)
-  "Copy headlines at level LEVEL (or the parameter
-  EXPORT-GRANULARITY if LEVEL not specifed) to their own files in
-  the directory called DIRECTORY (or named after the current
-  buffer)."
-  (interactive "p")
+(defun org-one-to-many (&optional directory)
+  "Copy headlines at level EXPORT-GRANULARITY to their own files
+in the directory called DIRECTORY (or named after the current
+buffer)."
+  (interactive)
   (let* (otm/filenames
 	 (filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
