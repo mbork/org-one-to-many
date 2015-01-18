@@ -4,7 +4,12 @@
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2014-10-25 sob 17:51]
 :END:
-* TODO Use named buffers associated with to-be-created files instead of with-temp-buffer
+* DONE Use named buffers associated with to-be-created files instead of with-temp-buffer
+:LOGBOOK:  
+- State "DONE"       from "TODO"       [2015-01-18 nie 23:12]
+:END:      
+In fact, we ended up using with-temp-file, as suggested by lunaryorn
+in http://emacs.stackexchange.com/a/2898/642
 * TODO Split at headlines with given property (tag?)
 * TODO Optimize otm/title-to-filename,
 so that it doesn't count from scratch each time a name conflict is resolved
