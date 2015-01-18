@@ -15,7 +15,7 @@ buffer)."
 	 (buffer (current-buffer))
 	 subfilename beg end)
     (make-directory directory t)
-    (with-temp-buffer
+    (with-temp-file (concat directory "/split-" filename ".org")
       (org-mode)
       (insert-buffer-substring buffer)
       ;; do stuff
@@ -64,23 +64,16 @@ buffer)."
 	;; Write the part between beg and end to the external file,
 	;; promoting it to level 1 first
 	(let ((headline (buffer-substring-no-properties beg end)))
-	  (with-temp-buffer
+	  (with-temp-file (concat directory "/" subfilename)
 	    (insert headline)
 	    (goto-char (point-min))
 	    (org-mode)
 	    (while (> (org-element-property :level (org-element-at-point)) 1)
-	      (org-promote-subtree))
-	    (write-region (point-min) (point-max) (concat directory "/" subfilename))))
+	      (org-promote-subtree))))
 	;; delete the previous contents, insert a link
 	(delete-region beg end)
 	(goto-char beg)
-	(save-excursion (insert "[[file:" subfilename "]]\n")))
-					; write the big file
-      (write-region (point-min)
-		    (point-max)
-		    (concat directory "/split-" filename ".org")
-		    nil
-		    'no-message))))
+	(save-excursion (insert "[[file:" subfilename "]]\n"))))))
 
 ; Generate filenames from titles (=arbitrary strings)
 ;; (defvar otm/filenames ()
