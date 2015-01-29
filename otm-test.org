@@ -23,13 +23,13 @@ Notepad
 *** Answer								 :no:
 Microsoft Word
 * Second chapter
-** Question 3								:mct:
+** Question 3							  :mct:split:
 Is RMS a normal person?
 *** Yes									 :no:
 *** No									:yes:
-** Link target
+** Link target							      :split:
 <<Second chapter>>
-* Org-element testing
+* Org-element testing						      :split:
 *Lorem ipsum dolor* sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua.
 ** Yet another target

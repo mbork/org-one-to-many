@@ -1,19 +1,22 @@
 ;; org-one-to-many functions
 
 (require 'cl)
-(setq export-granularity 2)
+(defvar otm/split-level 2
+  "The default level for splitting")
 
-; Copy subtrees at level EXPORT-GRANULARITY to their own files
-(defun org-one-to-many (&optional directory)
-  "Copy headlines at level EXPORT-GRANULARITY to their own files
-in the directory called DIRECTORY (or named after the current
-buffer)."
-  (interactive)
-  (let* (otm/filenames
-	 (filename (if buffer-file-name (file-name-base) "otm-output"))
+;; Copy selected subtrees to their own files
+(defun org-one-to-many (&optional split-level directory)
+  "Copy selected headlines to their own files in the directory
+called DIRECTORY (or named after the current buffer).
+\"Selected\" means at the level SPLIT-LEVEL or having tag SPLIT.
+If you want to use only the tag, set SPLIT-LEVEL to some absurd value
+like 42 (or -1, to be on the safe side)."
+  (interactive "P")
+  (let* ((filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
 	 (buffer (current-buffer))
-	 subfilename beg end)
+	 (split-level (prefix-numeric-value (or split-level otm/split-level)))
+	 otm/filenames subfilename beg end)
     (make-directory directory t)
     (with-temp-file (concat directory "/split-" filename ".org")
       (org-mode)
@@ -21,7 +24,8 @@ buffer)."
       ;; do stuff
       (org-element-map (org-element-parse-buffer 'headline) 'headline
 	; TODO: check org-map-entries & org-element-at-point!!
-	(lambda (elt) (if (= (org-element-property :level elt) export-granularity)
+	(lambda (elt) (if (or (= (org-element-property :level elt) split-level)
+			      (member-ignore-case "split" (org-element-property :tags elt)))
 					; add text properties with filenames
 			  (put-text-property (org-element-property :begin elt)
 					     (org-element-property :end elt)
@@ -68,12 +72,13 @@ buffer)."
 	    (insert headline)
 	    (goto-char (point-min))
 	    (org-mode)
-	    (while (> (org-element-property :level (org-element-at-point)) 1)
-	      (org-promote-subtree))))
+	    (dotimes (l (1- (org-element-property :level (org-element-at-point))))
+	      (org-promote-subtree)))
 	;; delete the previous contents, insert a link
-	(delete-region beg end)
-	(goto-char beg)
-	(save-excursion (insert "[[file:" subfilename "]]\n"))))))
+	  (goto-char beg)
+	  (skip-chars-forward "* ")
+	  (delete-region (point) end)
+	  (save-excursion (insert "[[file:" subfilename "]]\n")))))))
 
 ; Generate filenames from titles (=arbitrary strings)
 ;; (defvar otm/filenames ()
