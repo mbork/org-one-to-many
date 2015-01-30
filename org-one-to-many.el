@@ -1,21 +1,29 @@
 ;; org-one-to-many functions
 
 (require 'cl)
-(defvar otm/split-level 2
-  "The default level for splitting")
 
 ;; Copy selected subtrees to their own files
-(defun org-one-to-many (&optional split-level directory)
+(defun org-one-to-many (&optional split-at directory)
   "Copy selected headlines to their own files in the directory
 called DIRECTORY (or named after the current buffer).
-\"Selected\" means at the level SPLIT-LEVEL or having tag SPLIT.
-If you want to use only the tag, set SPLIT-LEVEL to some absurd value
+\"Selected\" means at the level SPLIT-AT or having tag SPLIT.
+If you want to use only the tag, set SPLIT-AT to some absurd value
 like 42 (or -1, to be on the safe side)."
   (interactive "P")
   (let* ((filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
 	 (buffer (current-buffer))
-	 (split-level (prefix-numeric-value (or split-level otm/split-level)))
+	 (split-p (cond ((stringp split-at)
+			 (lambda (elt)
+			   (member-ignore-case split-at (org-element-property :tags elt))))
+			((or (numberp split-at)
+			     (and (consp split-at)
+				  (numberp (car split-at))))
+			 (lambda (elt)
+			   (= (org-element-property :level elt) split-at)))
+			(t
+			 (lambda (elt)
+			   (member-ignore-case "split" (org-element-property :tags elt))))))
 	 otm/filenames subfilename beg end)
     (make-directory directory t)
     (with-temp-file (concat directory "/split-" filename ".org")
@@ -24,8 +32,7 @@ like 42 (or -1, to be on the safe side)."
       ;; do stuff
       (org-element-map (org-element-parse-buffer 'headline) 'headline
 	; TODO: check org-map-entries & org-element-at-point!!
-	(lambda (elt) (if (or (= (org-element-property :level elt) split-level)
-			      (member-ignore-case "split" (org-element-property :tags elt)))
+	(lambda (elt) (if (funcall split-p elt)
 					; add text properties with filenames
 			  (put-text-property (org-element-property :begin elt)
 					     (org-element-property :end elt)
