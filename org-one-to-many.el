@@ -112,3 +112,6 @@ like 42 (or -1, to be on the safe side)."
 	  new-filename)
       (push filename otm/filenames)
       filename)))
+
+(provide 'org-one-to-many)
+
