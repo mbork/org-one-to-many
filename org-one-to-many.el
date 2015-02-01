@@ -2,6 +2,10 @@
 
 (require 'cl)
 
+(defvar default-split-tag "split"
+  "Default value of SPLIT-AT in `org-one-to-many', used when no
+parameter is supplied.")
+
 ;; Copy selected subtrees to their own files
 (defun org-one-to-many (&optional split-at directory)
   "Copy selected headlines to their own files in the directory
@@ -16,7 +20,7 @@ like 42 (or -1, to be on the safe side)."
 	 (split-at (cond ((consp split-at)
 			  (prefix-numeric-value split-at))
 			 ((null split-at)
-			  "split")
+			  default-split-tag)
 			 (t
 			  split-at)))
 	 (split-p (cond ((stringp split-at)
