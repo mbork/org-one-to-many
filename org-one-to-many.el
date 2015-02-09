@@ -7,22 +7,25 @@
 parameter is supplied.")
 
 ;; Copy selected subtrees to their own files
-(defun org-one-to-many (&optional split-at directory)
+(defun org-one-to-many (&optional split-at directory bullets)
   "Copy selected headlines to their own files in the directory
 called DIRECTORY (or named after the current buffer).
-\"Selected\" means at the level SPLIT-AT or having tag SPLIT.
-If you want to use only the tag, set SPLIT-AT to some absurd value
-like 42 (or -1, to be on the safe side)."
+\"Selected\" means at the level (abs SPLIT-AT) or having tag
+SPLIT.  If you want to use only the tag, set SPLIT-AT to some
+absurd value like 42.  If BULLETS is non-nil (or SPLIT-AT
+is negative), put the links to the split headlines into a plain
+list bullets instead of headings."
   (interactive "P")
   (let* ((filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
 	 (buffer (current-buffer))
+	 (bullets (or bullets (< (prefix-numeric-value split-at) 0)))
 	 (split-at (cond ((consp split-at)
-			  (prefix-numeric-value split-at))
+			  (abs (prefix-numeric-value split-at)))
 			 ((null split-at)
 			  default-split-tag)
 			 (t
-			  split-at)))
+			  (abs split-at))))
 	 (split-p (cond ((stringp split-at)
 			 (lambda (elt)
 			   (member-ignore-case split-at (org-element-property :tags elt))))
@@ -88,9 +91,12 @@ like 42 (or -1, to be on the safe side)."
 	    (org-mode)
 	    (dotimes (l (1- (org-element-property :level (org-element-at-point))))
 	      (org-promote-subtree)))
-	;; delete the previous contents, insert a link
+	  ;; delete the previous contents, insert a link
 	  (goto-char beg)
 	  (skip-chars-forward "* ")
+	  (when bullets
+	    (delete-region (line-beginning-position) (point))
+	    (insert "- "))
 	  (delete-region (point) end)
 	  (save-excursion (insert "[[file:" subfilename "]]\n")))))))
 
