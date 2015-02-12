@@ -10,7 +10,10 @@
 :END:      
 In fact, we ended up using with-temp-file, as suggested by lunaryorn
 in http://emacs.stackexchange.com/a/2898/642
-* TODO Split at headlines with given property (tag?)
+* DONE Split at headlines with given property (tag?)
+:LOGBOOK:  
+- State "DONE"       from "TODO"       [2015-02-12 czw 20:09]
+:END:      
 * TODO Optimize otm/title-to-filename,
 so that it doesn't count from scratch each time a name conflict is resolved
 * TODO Check `org-map-entries' instead of `org-element-map'
