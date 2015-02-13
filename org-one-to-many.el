@@ -11,21 +11,22 @@ parameter is supplied.")
   "Copy selected headlines to their own files in the directory
 called DIRECTORY (or named after the current buffer).
 \"Selected\" means at the level (abs SPLIT-AT) or having tag
-SPLIT.  If you want to use only the tag, set SPLIT-AT to some
-absurd value like 42.  If BULLETS is non-nil (or SPLIT-AT
-is negative), put the links to the split headlines into a plain
-list bullets instead of headings."
+SPLIT-AT.  If BULLETS is non-nil (or SPLIT-AT is negative), put
+the links to the split headlines into a plain list bullets
+instead of headings."
   (interactive "P")
   (let* ((filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
 	 (buffer (current-buffer))
 	 (bullets (or bullets (< (prefix-numeric-value split-at) 0)))
-	 (split-at (cond ((consp split-at)
+	 (split-at (cond ((numberp split-at)
+			  (abs split-at))
+			 ((consp split-at)
 			  (abs (prefix-numeric-value split-at)))
 			 ((null split-at)
 			  default-split-tag)
 			 (t
-			  (abs split-at))))
+			  split-at)))
 	 (split-p (cond ((stringp split-at)
 			 (lambda (elt)
 			   (member-ignore-case split-at (org-element-property :tags elt))))
