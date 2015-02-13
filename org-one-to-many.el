@@ -35,6 +35,7 @@ instead of headings."
 			   (= (org-element-property :level elt) split-at)))
 			(t
 			 (error "This shouldn't happen."))))
+	 (filenames (list (concat "split-" filename ".org")))
 	 otm/filenames subfilename beg end)
     (make-directory directory t)
     (with-temp-file (concat directory "/split-" filename ".org")
@@ -83,6 +84,7 @@ instead of headings."
 	  (setq beg (next-single-property-change (point) :otm-filename))
 	(setq end (next-single-char-property-change beg :otm-filename))
 	(setq subfilename (concat (get-text-property beg :otm-filename) ".org"))
+	(push subfilename filenames)
 	;; Write the part between beg and end to the external file,
 	;; promoting it to level 1 first
 	(let ((headline (buffer-substring-no-properties beg end)))
@@ -99,7 +101,8 @@ instead of headings."
 	    (delete-region (line-beginning-position) (point))
 	    (insert "- "))
 	  (delete-region (point) end)
-	  (save-excursion (insert "[[file:" subfilename "]]\n")))))))
+	  (save-excursion (insert "[[file:" subfilename "]]\n")))))
+    (nreverse filenames)))
 
 ; Generate filenames from titles (=arbitrary strings)
 ;; (defvar otm/filenames ()
