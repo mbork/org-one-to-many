@@ -9,11 +9,20 @@ parameter is supplied.")
 ;; Copy selected subtrees to their own files
 (defun org-one-to-many (&optional split-at directory bullets)
   "Copy selected headlines to their own files in the directory
-called DIRECTORY (or named after the current buffer).
-\"Selected\" means at the level (abs SPLIT-AT) or having tag
-SPLIT-AT.  If BULLETS is non-nil (or SPLIT-AT is negative), put
-the links to the split headlines into a plain list bullets
-instead of headings."
+called DIRECTORY (or named after the current buffer).  Selection
+happens by means of SPLIT-AT.  It can be a string - then the
+selected headlines are the ones with that tag.  It can be
+a positive number or a list containing a positive number - then
+the selected headlines are the ones at that level.  It can be
+a negative number - then the selected headlines will be the ones
+at level \(- SPLIT-AT), but the links to them will be bullets
+instead of headlines (just as if BULLETS were non-nil).  It can
+be a cons cell - then the selected headlines will be the ones
+whose level is between (car SPLIT-AT) and (cdr SPLIT-AT)
+inclusive.
+
+If BULLETS is non-nil, put the links to the split headlines into
+a plain list bullets instead of headings."
   (interactive "P")
   (let* ((filename (if buffer-file-name (file-name-base) "otm-output"))
 	 (directory (or directory filename))
@@ -21,7 +30,8 @@ instead of headings."
 	 (bullets (or bullets (< (prefix-numeric-value split-at) 0)))
 	 (split-at (cond ((numberp split-at)
 			  (abs split-at))
-			 ((consp split-at)
+			 ((and (consp split-at)
+			       (null (cdr split-at)))
 			  (abs (prefix-numeric-value split-at)))
 			 ((null split-at)
 			  default-split-tag)
@@ -33,6 +43,14 @@ instead of headings."
 			((numberp split-at)
 			 (lambda (elt)
 			   (= (org-element-property :level elt) split-at)))
+			((and (consp split-at)
+			      (numberp (car split-at))
+			      (numberp (cdr split-at)))
+			 (lambda (elt)
+			   (and (>= (org-element-property :level elt)
+				    (car split-at))
+				(<= (org-element-property :level elt)
+				    (cdr split-at)))))
 			(t
 			 (error "This shouldn't happen."))))
 	 (filenames (list (concat "split-" filename ".org")))
