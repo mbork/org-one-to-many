@@ -54,7 +54,7 @@ a plain list bullets instead of headings."
 			(t
 			 (error "This shouldn't happen."))))
 	 (filenames (list (concat "split-" filename ".org")))
-	 otm/filenames subfilename beg end)
+	 otm/filenames subfilename beg end headline-title)
     (make-directory directory t)
     (with-temp-file (concat directory "/split-" filename ".org")
       (org-mode)
@@ -118,8 +118,9 @@ a plain list bullets instead of headings."
 	  (when bullets
 	    (delete-region (line-beginning-position) (point))
 	    (insert "- "))
+	  (setq headline-title (org-element-property :title (org-element-at-point)))
 	  (delete-region (point) end)
-	  (save-excursion (insert "[[file:" subfilename "]]\n")))))
+	  (save-excursion (insert (org-make-link-string (concat "file:" subfilename) headline-title) "\n")))))
     (nreverse filenames)))
 
 ; Generate filenames from titles (=arbitrary strings)
